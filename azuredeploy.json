@@ -31,10 +31,7 @@
       "defaultValue": "0"
     },
 	"newStorageAccountName": {
-      "type": "string",
-      "metadata": {
-          "description": "Name of the Storage Account"
-      }
+      "type": "string"
     },
     "storageAccountType": {
       "type": "string",
@@ -43,10 +40,7 @@
         "Standard_LRS",
         "Standard_GRS",
         "Standard_ZRS"
-      ],
-      "metadata": {
-          "description": "Storage Account type"
-      }
+      ]
     },
     "sqlServerName": {
       "type": "string"
@@ -151,10 +145,10 @@
           }
         },
 		{
-			"type": "Microsoft.Storage/storageAccounts",
+		    "apiVersion": "2015-05-01-preview",			
 			"name": "[parameters('newStorageAccountName')]",
-			"apiVersion": "2015-05-01-preview",
-			"location": "[parameters('siteLocation')]"
+			"type": "Microsoft.Storage/storageAccounts",
+			"location": "[parameters('siteLocation')]",
 			"dependsOn": [
             "[concat('Microsoft.Storage/storageAccounts', parameters('siteName'))]"
 			],
