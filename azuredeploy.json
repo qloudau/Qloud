@@ -150,7 +150,7 @@
 			"type": "Microsoft.Storage/storageAccounts",
 			"location": "[parameters('siteLocation')]",
 			"dependsOn": [
-            "[concat('Microsoft.Storage/storageAccounts', parameters('siteName'))]"
+            "[concat('Microsoft.Storage/storageAccounts/', parameters('siteName'))]"
 			],
 			"properties": {
 			"accountType": "[parameters('storageAccountType')]"
