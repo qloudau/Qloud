@@ -111,18 +111,6 @@
         "numberOfWorkers": 1
       }
     },
-	{
-		    "apiVersion": "2015-05-01-preview",			
-			"name": "[parameters('newStorageAccountName')]",
-			"type": "Microsoft.Storage/storageAccounts",
-			"location": "[parameters('siteLocation')]",
-			"dependsOn": [
-            "[concat('Microsoft.Storage/storageAccounts/', parameters('siteName'))]"
-			],
-			"properties": {
-			"accountType": "[parameters('storageAccountType')]"
-			}
-	},
     {
       "apiVersion": "2014-06-01",
       "name": "[parameters('siteName')]",
@@ -138,6 +126,17 @@
         "name": "[parameters('siteName')]",
         "serverFarm": "[parameters('hostingPlanName')]"
       },
+	  "resources": [
+		{
+			"type": "Microsoft.Storage/storageAccounts",
+			"name": "[parameters('newStorageAccountName')]",
+			"apiVersion": "2015-05-01-preview",
+			"location": "[parameters('location')]",
+			"properties": {
+			"accountType": "[parameters('storageAccountType')]"
+			}
+		}
+	  ],
       "resources": [
         {
           "apiVersion": "2014-04-01",
