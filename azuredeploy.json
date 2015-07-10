@@ -154,7 +154,10 @@
 			"type": "Microsoft.Storage/storageAccounts",
 			"name": "[parameters('newStorageAccountName')]",
 			"apiVersion": "2015-05-01-preview",
-			"location": "[parameters('siteLocation')]",
+			"location": "[parameters('siteLocation')]"
+			"dependsOn": [
+            "[concat('Microsoft.Storage/storageAccounts', parameters('siteName'))]"
+			],
 			"properties": {
 			"accountType": "[parameters('storageAccountType')]"
 			}
