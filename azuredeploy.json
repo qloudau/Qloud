@@ -42,6 +42,9 @@
         "Standard_ZRS"
       ]
     },
+	"location": {
+        "value": "Australia East"
+    }
     "sqlServerName": {
       "type": "string"
     },
@@ -103,7 +106,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[parameters('newStorageAccountName')]",
       "apiVersion": "2015-05-01-preview",
-      "location": "[parameters('siteLocation')]",
+      "location": "[parameters('location')]",
       "properties": {
         "accountType": "[parameters('storageAccountType')]"
       }
