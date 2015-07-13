@@ -44,11 +44,8 @@
     },
 	"location": {
       "type": "string",
-      "allowedValues": ["East US", "West US", "West Europe", "East Asia", "Southeast Asia", "Australia East"],
-      "metadata": {
-          "description": "Location of storage account"
-      }
-    }
+      "allowedValues": ["East US", "West US", "West Europe", "East Asia", "Southeast Asia", "Australia East"]
+    },
     "sqlServerName": {
       "type": "string"
     },
