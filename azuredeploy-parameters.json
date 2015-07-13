@@ -1,0 +1,26 @@
+{
+    "siteName": {
+        "value": "ExampleWebAppWithSQL"
+    },
+    "hostingPlanName": {
+        "value": "Default-Web-AustraliaEast"
+    },
+    "siteLocation": {
+        "value": "Australia East"
+    },
+    "serverName": {
+        "value": "mcelastic.database.windows.net,1433"
+    },
+    "serverLocation": {
+        "value": "Australia East"
+    },
+    "administratorLogin": {
+        "value": "NewAdmin"
+    },
+    "administratorLoginPassword": { 
+        "value": "NotSecurePassword"
+    },
+    "databaseName": { 
+        "value": "ExampleDatabase"
+    }
+}
