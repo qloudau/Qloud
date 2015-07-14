@@ -159,18 +159,6 @@
               }
             ]
           }
-        },
-		{
-          "apiVersion": "2014-06-01",
-          "name": "appsettings",
-          "type": "config",
-          "dependsOn": [
-             "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
-          ],
-          "properties": {
-              "PROJECT": "src\\MultiChannelToDo.Web\\app",
-              "apiPath": "[concat('http://', parameters('siteName'), '.azurewebsites.net/api')]"
-                   }
         },		
         {
           "apiVersion": "2014-06-01",
