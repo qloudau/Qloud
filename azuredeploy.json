@@ -1,180 +1,221 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "siteName": {
-      "type": "string"
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "MCStorName": {
+            "type": "string"
+        },
+        "MCStorType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ]
+        },
+        "MCStorLocation": {
+            "type": "string",
+            "defaultValue": "West US",
+            "allowedValues": [
+                "East US",
+                "West US",
+                "West Europe",
+                "East Asia",
+                "South East Asia"
+            ]
+        },
+        "MatterCenterName": {
+            "type": "string"
+        },
+        "MatterCenterLocation": {
+            "type": "string"
+        },
+        "MatterCenterSKU": {
+            "type": "string",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard"
+            ],
+            "defaultValue": "Free"
+        },
+        "MatterCenterWorkerSize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
+        },
+        "MCWebName": {
+            "type": "string"
+        },
+        "MCDBServerName": {
+            "type": "string"
+        },
+        "MCDBServerLocation": {
+            "type": "string"
+        },
+        "MCDBServerAdminLogin": {
+            "type": "string"
+        },
+        "MCDBServerAdminLoginPassword": {
+            "type": "securestring"
+        },
+        "MCDBName": {
+            "type": "string"
+        },
+        "MCDBCollation": {
+            "type": "string",
+            "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+        },
+        "MCDBEdition": {
+            "type": "string",
+            "defaultValue": "Web",
+            "allowedValues": [
+                "Basic",
+                "Business",
+                "Premium",
+                "Standard",
+                "Web"
+            ]
+        },
+        "MCSQLImportStorageKeyType": {
+            "type": "string"
+        },
+        "MCSQLImportStorageKey": {
+            "type": "securestring"
+        },
+        "MCSQLImportStorageUri": {
+            "type": "string"
+        },
+        "MCSQLImportAdministratorLogin": {
+            "type": "string"
+        },
+        "MCSQLImportAdministratorLoginPassword": {
+            "type": "securestring"
+        }
     },
-    "hostingPlanName": {
-      "type": "string"
+    "variables": {
     },
-    "siteLocation": {
-      "type": "string"
-    },
-    "sku": {
-      "type": "string",
-      "allowedValues": [
-        "Free",
-        "Shared",
-        "Basic",
-        "Standard"
-      ],
-      "defaultValue": "Free"
-    },
-    "workerSize": {
-      "type": "string",
-      "allowedValues": [
-        "0",
-        "1",
-        "2"
-      ],
-      "defaultValue": "0"
-    },
-	"newStorageAccountName": {
-      "type": "string"
-    },
-    "storageAccountType": {
-      "type": "string",
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_GRS",
-        "Standard_ZRS"
-      ]
-    },
-	"location": {
-      "type": "string",
-      "allowedValues": ["East US", "West US", "West Europe", "East Asia", "Southeast Asia"],
-      "metadata": {
-          "description": "Location of storage account"
-      }
-    },
-    "sqlServerName": {
-      "type": "string"
-    },
-    "sqlAdministratorLogin": {
-      "type": "string"
-    },
-    "sqlAdministratorPassword": {
-      "type": "securestring"
-    },
-    "repoUrl": {
-      "type": "string"
-    },
-    "branch": {
-      "type": "string"
-    }
-  },
-  "resources": [
-    {
-      "name": "[parameters('sqlServerName')]",
-      "type": "Microsoft.Sql/servers",
-      "location": "[parameters('siteLocation')]",
-      "apiVersion": "2.0",
-      "properties": {
-        "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-        "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]"
-      },
-      "resources": [
+    "resources": [
         {
-          "name": "[parameters('siteName')]",
-          "type": "databases",
-          "location": "[parameters('siteLocation')]",
-          "apiVersion": "2.0",
-          "dependsOn": [
-            "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-          ],
-          "properties": {
-            "edition": "Web",
-            "collation": "SQL_Latin1_General_CP1_CI_AS",
-            "maxSizeBytes": "1073741824",
-            "requestedServiceObjectiveId": "910b4fcb-8a29-4c3e-958f-f7ba794388b2"
-          }
+            "name": "[parameters('MCStorName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[parameters('MCStorLocation')]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "MCStor"
+            },
+            "properties": {
+                "accountType": "[parameters('MCStorType')]"
+            }
         },
         {
-          "apiVersion": "2.0",
-          "dependsOn": [
-            "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-          ],
-          "location": "[parameters('siteLocation')]",
-          "name": "AllowAllWindowsAzureIps",
-          "properties": {
-            "endIpAddress": "0.0.0.0",
-            "startIpAddress": "0.0.0.0"
-          },
-          "type": "firewallrules"
-        }
-      ]
-    },
-	{
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('newStorageAccountName')]",
-      "apiVersion": "2015-05-01-preview",
-      "location": "[parameters('location')]",
-      "properties": {
-        "accountType": "[parameters('storageAccountType')]"
-      }
-    },	
-    {
-      "apiVersion": "2014-06-01",
-      "name": "[parameters('hostingPlanName')]",
-      "type": "Microsoft.Web/serverFarms",
-      "location": "[parameters('siteLocation')]",
-      "properties": {
-        "name": "[parameters('hostingPlanName')]",
-        "sku": "[parameters('sku')]",
-        "workerSize": "[parameters('workerSize')]",
-        "numberOfWorkers": 1
-      }
-    },
-    {
-      "apiVersion": "2014-06-01",
-      "name": "[parameters('siteName')]",
-      "type": "Microsoft.Web/Sites",
-      "location": "[parameters('siteLocation')]",
-      "dependsOn": [
-        "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
-      ],
-      "tags": {
-        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
-      },
-      "properties": {
-        "name": "[parameters('siteName')]",
-        "serverFarm": "[parameters('hostingPlanName')]"
-      },
-      "resources": [
+            "name": "[parameters('MatterCenterName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[parameters('MatterCenterLocation')]",
+            "apiVersion": "2014-06-01",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "MatterCenter"
+            },
+            "properties": {
+                "name": "[parameters('MatterCenterName')]",
+                "sku": "[parameters('MatterCenterSKU')]",
+                "workerSize": "[parameters('MatterCenterWorkerSize')]",
+                "numberOfWorkers": 1
+            }
+        },
         {
-          "apiVersion": "2014-06-01",
-          "type": "config",
-          "name": "web",
-          "dependsOn": [
-            "[concat('Microsoft.Web/Sites/', parameters('siteName'))]"
-          ],
-          "properties": {
-            "connectionStrings": [
-              {
-                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';')]",
-                "Name": "MatterCenter",
-                "Type": 2
-              }
+            "name": "[parameters('MCWebName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[parameters('MatterCenterLocation')]",
+            "apiVersion": "2014-06-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('MatterCenterName'))]"
+            ],
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('MatterCenterName'))]": "Resource",
+                "displayName": "MCWeb"
+            },
+            "properties": {
+                "name": "[parameters('MCWebName')]",
+                "serverFarm": "[parameters('MatterCenterName')]"
+            }
+        },
+        {
+            "name": "[parameters('MCDBServerName')]",
+            "type": "Microsoft.Sql/servers",
+            "location": "[parameters('MCDBServerLocation')]",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "MCDBServer"
+            },
+            "properties": {
+                "administratorLogin": "[parameters('MCDBServerAdminLogin')]",
+                "administratorLoginPassword": "[parameters('MCDBServerAdminLoginPassword')]"
+            },
+            "resources": [
+                {
+                    "name": "AllowAllWindowsAzureIps",
+                    "type": "firewallrules",
+                    "location": "[parameters('MCDBServerLocation')]",
+                    "apiVersion": "2014-04-01-preview",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('MCDBServerName'))]"
+                    ],
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                    "name": "[parameters('MCDBName')]",
+                    "type": "databases",
+                    "location": "[parameters('MCDBServerLocation')]",
+                    "apiVersion": "2014-04-01-preview",
+                    "dependsOn": [
+                        "[parameters('MCDBServerName')]"
+                    ],
+                    "tags": {
+                        "displayName": "MCDB"
+                    },
+                    "properties": {
+                        "collation": "[parameters('MCDBCollation')]",
+                        "edition": "[parameters('MCDBEdition')]",
+                        "maxSizeBytes": "1073741824"
+                    },
+                    "resources": [
+                        {
+                            "name": "Import",
+                            "type": "extensions",
+                            "apiVersion": "2014-04-01-preview",
+                            "dependsOn": [
+                                "[parameters('MCDBName')]"
+                            ],
+                            "tags": {
+                                "displayName": "MCSQLImport"
+                            },
+                            "properties": {
+                                "storageKeyType": "[parameters('MCSQLImportStorageKeyType')]",
+                                "storageKey": "[parameters('MCSQLImportStorageKey')]",
+                                "storageUri": "[parameters('MCSQLImportStorageUri')]",
+                                "administratorLogin": "[parameters('MCSQLImportAdministratorLogin')]",
+                                "administratorLoginPassword": "[parameters('MCSQLImportAdministratorLoginPassword')]",
+                                "operationMode": "Import"
+                            }
+                        }
+                    ]
+                }
             ]
-          }
-        },		
-        {
-          "apiVersion": "2014-06-01",
-          "name": "web",
-          "type": "sourcecontrols",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
-            "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/web')]"
-          ],
-          "properties": {
-            "RepoUrl": "[parameters('repoUrl')]",
-            "branch": "[parameters('branch')]",
-            "IsManualIntegration": true
-          }
         }
-      ]
+    ],
+    "outputs": {
     }
-  ]
 }
