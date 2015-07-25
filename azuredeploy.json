@@ -42,6 +42,12 @@
         "MCSQLServerAdminLoginPassword": {
             "type": "securestring"
         },
+		"repoUrl": {
+			"type": "string"
+		},
+		"branch": {
+			"type": "string"
+		},
         "MCSQLDBName": {
             "type": "string"
         },
