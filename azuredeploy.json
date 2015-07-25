@@ -2,36 +2,13 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "MCStorName": {
+        "MCPlanName": {
             "type": "string"
         },
-        "MCStorType": {
-            "type": "string",
-            "defaultValue": "Standard_LRS",
-            "allowedValues": [
-                "Standard_LRS",
-                "Standard_GRS",
-                "Standard_ZRS"
-            ]
-        },
-        "MCStorLocation": {
-            "type": "string",
-            "defaultValue": "West US",
-            "allowedValues": [
-                "East US",
-                "West US",
-                "West Europe",
-                "East Asia",
-                "South East Asia"
-            ]
-        },
-        "MatterCenterName": {
+        "MCPlanLocation": {
             "type": "string"
         },
-        "MatterCenterLocation": {
-            "type": "string"
-        },
-        "MatterCenterSKU": {
+        "MCPlanSKU": {
             "type": "string",
             "allowedValues": [
                 "Free",
@@ -41,7 +18,7 @@
             ],
             "defaultValue": "Free"
         },
-        "MatterCenterWorkerSize": {
+        "MCPlanWorkerSize": {
             "type": "string",
             "allowedValues": [
                 "0",
@@ -50,29 +27,29 @@
             ],
             "defaultValue": "0"
         },
-        "MCWebName": {
+        "MCWebAppName": {
             "type": "string"
         },
-        "MCDBServerName": {
+        "MCSQLServerName": {
             "type": "string"
         },
-        "MCDBServerLocation": {
+        "MCSQLServerLocation": {
             "type": "string"
         },
-        "MCDBServerAdminLogin": {
+        "MCSQLServerAdminLogin": {
             "type": "string"
         },
-        "MCDBServerAdminLoginPassword": {
+        "MCSQLServerAdminLoginPassword": {
             "type": "securestring"
         },
-        "MCDBName": {
+        "MCSQLDBName": {
             "type": "string"
         },
-        "MCDBCollation": {
+        "MCSQLDBCollation": {
             "type": "string",
             "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
         },
-        "MCDBEdition": {
+        "MCSQLDBEdition": {
             "type": "string",
             "defaultValue": "Web",
             "allowedValues": [
@@ -83,92 +60,103 @@
                 "Web"
             ]
         },
-        "MCSQLImportStorageKeyType": {
+        "MCSQLDBImportStorageKeyType": {
             "type": "string"
         },
-        "MCSQLImportStorageKey": {
+        "MCSQLDBImportStorageKey": {
             "type": "securestring"
         },
-        "MCSQLImportStorageUri": {
+        "MCSQLDBImportStorageUri": {
             "type": "string"
         },
-        "MCSQLImportAdministratorLogin": {
+        "MCSQLDBImportAdministratorLogin": {
             "type": "string"
         },
-        "MCSQLImportAdministratorLoginPassword": {
+        "MCSQLDBImportAdministratorLoginPassword": {
             "type": "securestring"
+        },
+        "MCStorageName": {
+            "type": "string"
+        },
+        "MCStorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ]
+        },
+        "MCStorageLocation": {
+            "type": "string",
+            "defaultValue": "Australia East",
+            "allowedValues": [
+			    "Australia East",
+                "East US",
+                "West US",
+                "West Europe",
+                "East Asia",
+                "South East Asia"
+            ]
         }
     },
     "variables": {
     },
     "resources": [
         {
-            "name": "[parameters('MCStorName')]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "location": "[parameters('MCStorLocation')]",
-            "apiVersion": "2015-05-01-preview",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "MCStor"
-            },
-            "properties": {
-                "accountType": "[parameters('MCStorType')]"
-            }
-        },
-        {
-            "name": "[parameters('MatterCenterName')]",
+            "name": "[parameters('MCPlanName')]",
             "type": "Microsoft.Web/serverfarms",
-            "location": "[parameters('MatterCenterLocation')]",
+            "location": "[parameters('MCPlanLocation')]",
             "apiVersion": "2014-06-01",
             "dependsOn": [ ],
             "tags": {
-                "displayName": "MatterCenter"
+                "displayName": "MCPlan"
             },
             "properties": {
-                "name": "[parameters('MatterCenterName')]",
-                "sku": "[parameters('MatterCenterSKU')]",
-                "workerSize": "[parameters('MatterCenterWorkerSize')]",
+                "name": "[parameters('MCPlanName')]",
+                "sku": "[parameters('MCPlanSKU')]",
+                "workerSize": "[parameters('MCPlanWorkerSize')]",
                 "numberOfWorkers": 1
             }
         },
         {
-            "name": "[parameters('MCWebName')]",
+            "name": "[parameters('MCWebAppName')]",
             "type": "Microsoft.Web/sites",
-            "location": "[parameters('MatterCenterLocation')]",
+            "location": "[parameters('MCPlanLocation')]",
             "apiVersion": "2014-06-01",
             "dependsOn": [
-                "[concat('Microsoft.Web/serverfarms/', parameters('MatterCenterName'))]"
+                "[concat('Microsoft.Web/serverfarms/', parameters('MCPlanName'))]"
             ],
             "tags": {
-                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('MatterCenterName'))]": "Resource",
-                "displayName": "MCWeb"
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('MCPlanName'))]": "Resource",
+                "displayName": "MCWebApp"
             },
             "properties": {
-                "name": "[parameters('MCWebName')]",
-                "serverFarm": "[parameters('MatterCenterName')]"
+                "name": "[parameters('MCWebAppName')]",
+                "serverFarm": "[parameters('MCPlanName')]"
             }
         },
         {
-            "name": "[parameters('MCDBServerName')]",
+            "name": "[parameters('MCSQLServerName')]",
             "type": "Microsoft.Sql/servers",
-            "location": "[parameters('MCDBServerLocation')]",
+            "location": "[parameters('MCSQLServerLocation')]",
             "apiVersion": "2014-04-01-preview",
             "dependsOn": [ ],
             "tags": {
-                "displayName": "MCDBServer"
+                "displayName": "MCSQLServer"
             },
             "properties": {
-                "administratorLogin": "[parameters('MCDBServerAdminLogin')]",
-                "administratorLoginPassword": "[parameters('MCDBServerAdminLoginPassword')]"
+                "administratorLogin": "[parameters('MCSQLServerAdminLogin')]",
+                "administratorLoginPassword": "[parameters('MCSQLServerAdminLoginPassword')]"
             },
             "resources": [
                 {
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
-                    "location": "[parameters('MCDBServerLocation')]",
+                    "location": "[parameters('MCSQLServerLocation')]",
                     "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('MCDBServerName'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('MCSQLServerName'))]"
                     ],
                     "properties": {
                         "startIpAddress": "0.0.0.0",
@@ -176,19 +164,19 @@
                     }
                 },
                 {
-                    "name": "[parameters('MCDBName')]",
+                    "name": "[parameters('MCSQLDBName')]",
                     "type": "databases",
-                    "location": "[parameters('MCDBServerLocation')]",
+                    "location": "[parameters('MCSQLServerLocation')]",
                     "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
-                        "[parameters('MCDBServerName')]"
+                        "[parameters('MCSQLServerName')]"
                     ],
                     "tags": {
-                        "displayName": "MCDB"
+                        "displayName": "MCSQLDB"
                     },
                     "properties": {
-                        "collation": "[parameters('MCDBCollation')]",
-                        "edition": "[parameters('MCDBEdition')]",
+                        "collation": "[parameters('MCSQLDBCollation')]",
+                        "edition": "[parameters('MCSQLDBEdition')]",
                         "maxSizeBytes": "1073741824"
                     },
                     "resources": [
@@ -197,23 +185,36 @@
                             "type": "extensions",
                             "apiVersion": "2014-04-01-preview",
                             "dependsOn": [
-                                "[parameters('MCDBName')]"
+                                "[parameters('MCSQLDBName')]"
                             ],
                             "tags": {
-                                "displayName": "MCSQLImport"
+                                "displayName": "MCSQLDBImport"
                             },
                             "properties": {
-                                "storageKeyType": "[parameters('MCSQLImportStorageKeyType')]",
-                                "storageKey": "[parameters('MCSQLImportStorageKey')]",
-                                "storageUri": "[parameters('MCSQLImportStorageUri')]",
-                                "administratorLogin": "[parameters('MCSQLImportAdministratorLogin')]",
-                                "administratorLoginPassword": "[parameters('MCSQLImportAdministratorLoginPassword')]",
+                                "storageKeyType": "[parameters('MCSQLDBImportStorageKeyType')]",
+                                "storageKey": "[parameters('MCSQLDBImportStorageKey')]",
+                                "storageUri": "[parameters('MCSQLDBImportStorageUri')]",
+                                "administratorLogin": "[parameters('MCSQLDBImportAdministratorLogin')]",
+                                "administratorLoginPassword": "[parameters('MCSQLDBImportAdministratorLoginPassword')]",
                                 "operationMode": "Import"
                             }
                         }
                     ]
                 }
             ]
+        },
+        {
+            "name": "[parameters('MCStorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[parameters('MCStorageLocation')]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "MCStorage"
+            },
+            "properties": {
+                "accountType": "[parameters('MCStorageType')]"
+            }
         }
     ],
     "outputs": {
