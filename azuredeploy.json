@@ -134,7 +134,40 @@
             "properties": {
                 "name": "[parameters('MCWebAppName')]",
                 "serverFarm": "[parameters('MCPlanName')]"
-            }
+            },
+      "resources": [
+        {
+          "apiVersion": "2014-04-01",
+          "type": "config",
+          "name": "web",
+          "dependsOn": [
+            "[concat('Microsoft.Web/Sites/', parameters('MCWebAppName'))]"
+          ],
+          "properties": {
+            "connectionStrings": [
+              {
+                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('MCSQLServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('MCSQLDBName'), ';User Id=', parameters('MCSQLServerAdminLogin'), '@', parameters('MCSQLServerName'), ';Password=', parameters('MCSQLServerAdminLoginPassword'), ';')]",
+                "Name": "MCConnection",
+                "Type": 2
+              }
+            ]
+          }
+        },
+        {
+          "apiVersion": "2014-04-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', parameters('MCWebAppName'))]",
+            "[concat('Microsoft.Web/Sites/', parameters('MCWebAppName'), '/config/web')]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoUrl')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]			
         },
         {
             "name": "[parameters('MCSQLServerName')]",
