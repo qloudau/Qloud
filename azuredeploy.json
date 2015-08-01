@@ -30,16 +30,13 @@
         "siteName": {
             "type": "string"
         },
-        "MCSQLServerName": {
+        "sqlServerName": {
             "type": "string"
         },
-        "MCSQLServerLocation": {
+        "sqlServerAdminLogin": {
             "type": "string"
         },
-        "MCSQLServerAdminLogin": {
-            "type": "string"
-        },
-        "MCSQLServerAdminLoginPassword": {
+        "sqlServerAdminPassword": {
             "type": "securestring"
         },
 		"repoUrl": {
@@ -48,14 +45,14 @@
 		"branch": {
 			"type": "string"
 		},
-        "MCSQLDBName": {
+        "sqlDbName": {
             "type": "string"
         },
-        "MCSQLDBCollation": {
+        "sqlDbCollation": {
             "type": "string",
             "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
         },
-        "MCSQLDBEdition": {
+        "sqlDbEdition": {
             "type": "string",
             "defaultValue": "Web",
             "allowedValues": [
@@ -66,19 +63,19 @@
                 "Web"
             ]
         },
-        "MCSQLDBImportStorageKeyType": {
+        "sqlDbImportStorageKeyType": {
             "type": "string"
         },
-        "MCSQLDBImportStorageKey": {
+        "sqlDbImportStorageKey": {
             "type": "securestring"
         },
-        "MCSQLDBImportStorageUri": {
+        "sqlDbImportStorageUri": {
             "type": "string"
         },
-        "MCSQLDBImportAdministratorLogin": {
+        "sqlDbImportAdministratorLogin": {
             "type": "string"
         },
-        "MCSQLDBImportAdministratorLoginPassword": {
+        "sqlDbImportAdministratorLoginPassword": {
             "type": "securestring"
         },
         "MCStorageName": {
@@ -152,7 +149,7 @@
           "properties": {
             "connectionStrings": [
               {
-                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('MCSQLServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('MCSQLDBName'), ';User Id=', parameters('MCSQLServerAdminLogin'), '@', parameters('MCSQLServerName'), ';Password=', parameters('MCSQLServerAdminLoginPassword'), ';')]",
+                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('sqlDbName'), ';User Id=', parameters('sqlServerAdminLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlServerAdminPassword'), ';')]",
                 "Name": "MCConnection",
                 "Type": 2
               }
@@ -179,26 +176,26 @@
       ]			
         },
         {
-            "name": "[parameters('MCSQLServerName')]",
+            "name": "[parameters('sqlServerName')]",
             "type": "Microsoft.Sql/servers",
-            "location": "[parameters('MCSQLServerLocation')]",
+            "location": "[parameters('siteLocation')]",
             "apiVersion": "2014-04-01-preview",
             "dependsOn": [ ],
             "tags": {
                 "displayName": "MCSQLServer"
             },
             "properties": {
-                "administratorLogin": "[parameters('MCSQLServerAdminLogin')]",
-                "administratorLoginPassword": "[parameters('MCSQLServerAdminLoginPassword')]"
+                "administratorLogin": "[parameters('sqlServerAdminLogin')]",
+                "administratorLoginPassword": "[parameters('sqlServerAdminPassword')]"
             },
             "resources": [
                 {
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
-                    "location": "[parameters('MCSQLServerLocation')]",
+                    "location": "[parameters('siteLocation')]",
                     "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('MCSQLServerName'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
                     ],
                     "properties": {
                         "startIpAddress": "0.0.0.0",
@@ -206,19 +203,19 @@
                     }
                 },
                 {
-                    "name": "[parameters('MCSQLDBName')]",
+                    "name": "[parameters('sqlDbName')]",
                     "type": "databases",
-                    "location": "[parameters('MCSQLServerLocation')]",
+                    "location": "[parameters('siteLocation')]",
                     "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
-                        "[parameters('MCSQLServerName')]"
+                        "[parameters('sqlServerName')]"
                     ],
                     "tags": {
-                        "displayName": "MCSQLDB"
+                        "displayName": "sqlDb"
                     },
                     "properties": {
-                        "collation": "[parameters('MCSQLDBCollation')]",
-                        "edition": "[parameters('MCSQLDBEdition')]",
+                        "collation": "[parameters('sqlDbCollation')]",
+                        "edition": "[parameters('sqlDbEdition')]",
                         "maxSizeBytes": "1073741824"
                     },
                     "resources": [
@@ -227,17 +224,17 @@
                             "type": "extensions",
                             "apiVersion": "2014-04-01-preview",
                             "dependsOn": [
-                                "[parameters('MCSQLDBName')]"
+                                "[parameters('sqlDbName')]"
                             ],
                             "tags": {
-                                "displayName": "MCSQLDBImport"
+                                "displayName": "sqlDbImport"
                             },
                             "properties": {
-                                "storageKeyType": "[parameters('MCSQLDBImportStorageKeyType')]",
-                                "storageKey": "[parameters('MCSQLDBImportStorageKey')]",
-                                "storageUri": "[parameters('MCSQLDBImportStorageUri')]",
-                                "administratorLogin": "[parameters('MCSQLDBImportAdministratorLogin')]",
-                                "administratorLoginPassword": "[parameters('MCSQLDBImportAdministratorLoginPassword')]",
+                                "storageKeyType": "[parameters('sqlDbImportStorageKeyType')]",
+                                "storageKey": "[parameters('sqlDbImportStorageKey')]",
+                                "storageUri": "[parameters('sqlDbImportStorageUri')]",
+                                "administratorLogin": "[parameters('sqlDbImportAdministratorLogin')]",
+                                "administratorLoginPassword": "[parameters('sqlDbImportAdministratorLoginPassword')]",
                                 "operationMode": "Import"
                             }
                         }

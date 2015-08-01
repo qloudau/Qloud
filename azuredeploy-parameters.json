@@ -1,11 +1,26 @@
 {
     "siteName": {
-        "value": "SiteName"
+        "value": "ExampleWebAppWithSQL"
     },
     "hostingPlanName": {
-        "value": "AppServicePlanName"        
+        "value": "NewServiceAppPlan"
     },
     "siteLocation": {
-        "value": "West US"      
+        "value": "West US"
+    },
+    "serverName": {
+        "value": "NewServer"
+    },
+    "serverLocation": {
+        "value": "West US"
+    },
+    "administratorLogin": {
+        "value": "NewAdmin"
+    },
+    "administratorLoginPassword": { 
+        "value": "NotSecurePassword"
+    },
+    "databaseName": { 
+        "value": "ExampleDatabase"
     }
 }
