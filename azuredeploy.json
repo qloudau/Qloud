@@ -42,8 +42,7 @@
       "defaultValue": "SQLAdmin"
     },
     "sqlServerAdminPassword": {
-      "type": "securestring",
-      "defaultValue": "1q2w3e4r5t^z"
+      "type": "securestring"
     },
     "repoUrl": {
       "type": "string",
@@ -89,8 +88,7 @@
       "defaultValue": "SQLAdmin"
     },
     "sqlDbImportAdministratorLoginPassword": {
-      "type": "securestring",
-       "defaultValue": "1q2w3e4r5t^z"
+      "type": "securestring"
     },
     "MCStorageLocation": {
       "type": "string",
