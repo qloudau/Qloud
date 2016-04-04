@@ -125,7 +125,7 @@
       "name": "[parameters('hostingPlanName')]",
       "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('siteLocation')]",
-      "apiVersion": "2015-08-01",
+      "apiVersion": "2014-06-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "MCPlan"
