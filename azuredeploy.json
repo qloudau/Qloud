@@ -31,7 +31,7 @@
     },
     "siteName": {
       "type": "string",
-      "defaultValue": "mc003"
+      "defaultValue": "mc004"
     },
     "sqlServerName": {
       "type": "string",
@@ -54,7 +54,7 @@
     },
     "sqlDbName": {
       "type": "string",
-      "defaultValue": "mc003-db"
+      "defaultValue": "mc004-db"
     },
     "sqlDbCollation": {
       "type": "string",
@@ -187,8 +187,7 @@
           ],
           "properties": {
             "RepoUrl": "[parameters('repoUrl')]",
-            "branch": "[parameters('branch')]",
-            "IsManualIntegration": false
+            "branch": "[parameters('branch')]"
           }
         }
       ]
