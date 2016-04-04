@@ -1,5 +1,5 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "hostingPlanName": {
@@ -125,7 +125,7 @@
       "name": "[parameters('hostingPlanName')]",
       "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('siteLocation')]",
-      "apiVersion": "2015-04-01",
+      "apiVersion": "2014-06-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "MCPlan"
@@ -141,7 +141,7 @@
       "name": "[parameters('siteName')]",
       "type": "Microsoft.Web/sites",
       "location": "[parameters('siteLocation')]",
-      "apiVersion": "2015-04-01",
+      "apiVersion": "2014-06-01",
       "dependsOn": [
         "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
       ],
@@ -155,7 +155,7 @@
       },
       "resources": [
         {
-          "apiVersion": "2015-04-01",
+          "apiVersion": "2014-04-01",
           "type": "config",
           "name": "web",
           "dependsOn": [
